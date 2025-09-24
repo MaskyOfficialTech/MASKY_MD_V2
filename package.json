@@ -4,8 +4,8 @@
   "description": "A WhatsApp Bot Created By MASKY MD Official",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name MASKY MD",
-    "stop": "pm2 stop MASKY MD",
+    "start": "pm2 start index.js --deep-monitoring --attach --name MASKY_MD",
+    "stop": "pm2 stop MASKY_MD",
     "restart": "pm2 restart MASKY-MD-V2"
   },
   "dependencies": {
