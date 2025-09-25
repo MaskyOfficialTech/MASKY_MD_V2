@@ -66,21 +66,28 @@ const {
   setInterval(clearTempDir, 5 * 60 * 1000);
   
   //===================SESSION-AUTH============================
-if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
-    if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
-    
-    const sessdata = config.SESSION_ID.replace("masky~", '');
+// Ensure the sessions folder exists
+const sessionsFolder = path.join(__dirname, 'sessions');
+if (!fs.existsSync(sessionsFolder)) fs.mkdirSync(sessionsFolder, { recursive: true });
+
+// Try to use creds.json if exists
+if (fs.existsSync(path.join(sessionsFolder, 'creds.json'))) {
+    console.log("Using existing session ✅");
+} 
+// Else use SESSION_ID env
+else if (config.SESSION_ID) {
     try {
-        // Decode base64 string
+        const sessdata = config.SESSION_ID.replace("masky~", '');
         const decodedData = Buffer.from(sessdata, 'base64').toString('utf-8');
-        
-        // Write decoded data to creds.json
-        fs.writeFileSync(__dirname + '/sessions/creds.json', decodedData);
-        console.log("Session loaded ✅");
+        fs.writeFileSync(path.join(sessionsFolder, 'creds.json'), decodedData);
+        console.log("Session loaded from ENV ✅");
     } catch (err) {
         console.error("Error decoding session data:", err);
-        throw err;
     }
+} 
+// Else prompt to add session
+else {
+    console.log('❌ No session found! Please add your session to SESSION_ID env.');
 }
 
 const express = require("express");
